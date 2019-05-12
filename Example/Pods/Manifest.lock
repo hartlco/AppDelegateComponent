@@ -1,0 +1,16 @@
+PODS:
+  - AppDelegateComponent (0.1.0)
+
+DEPENDENCIES:
+  - AppDelegateComponent (from `../`)
+
+EXTERNAL SOURCES:
+  AppDelegateComponent:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  AppDelegateComponent: 6e86dbacdde2ee2cac59dc14cde4f2cee2f8accc
+
+PODFILE CHECKSUM: 5913a71ff3aeddc109ed667ed83e61982a73fe11
+
+COCOAPODS: 1.7.0.beta.3
