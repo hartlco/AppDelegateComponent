@@ -7,12 +7,17 @@ import UIKit
 public protocol AppDelegateComponent {
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?)
+
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any]) -> Bool
 }
 
-extension AppDelegateComponent {
+// Default implementations
+public extension AppDelegateComponent {
     func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
-        // Empty default implementation
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) { }
+
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+        return true
     }
 }
 
@@ -30,5 +35,15 @@ final public class AppDelegateComponentRunner {
             $0.application(application,
                            didFinishLaunchingWithOptions: launchOptions)
         }
+    }
+
+    public func componentStore(_ componentStore: AppDelegateComponentStore,
+                               app: UIApplication,
+                               open url: URL,
+                               options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+
+        return componentStore.storedComponents.reduce(false, { result, component in
+            return result || component.application(app, open: url, options: options)
+        })
     }
 }
