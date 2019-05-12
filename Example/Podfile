@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'AppDelegateComponent_Example' do
+  pod 'AppDelegateComponent', :path => '../'
+
+  target 'AppDelegateComponent_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
