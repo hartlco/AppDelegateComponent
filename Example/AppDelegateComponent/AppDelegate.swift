@@ -17,11 +17,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AppDelegateComponentStore
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        componentRunner.componentStore(self,
+        return componentRunner.componentStore(self,
                                        application: application,
                                        didFinishLaunchingWithOptions: launchOptions)
+    }
 
-        return true
+    func application(_ application: UIApplication, willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        return componentRunner.componentStore(self,
+                                              application: application,
+                                              willFinishLaunchingWithOptions: launchOptions)
     }
 }
 

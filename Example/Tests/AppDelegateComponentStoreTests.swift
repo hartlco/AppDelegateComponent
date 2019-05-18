@@ -64,6 +64,74 @@ class AppDelegateComponentStoreTests: XCTestCase {
             XCTAssert(receivedResult == .some(.noData), "Not new data")
         }
     }
+
+    // MARK: - didReceiveRemoteNotification
+
+    func test_didReceiveRemoteNotification_returnsNewDataIfAvailable() {
+        let component1 = FetchComponent(delay: 1, result: .failed)
+        let component2 = FetchComponent(delay: 1.9, result: .noData)
+        let component3 = FetchComponent(delay: 1.5, result: .newData)
+
+        let store = Store(storedComponents: [component1, component2, component3])
+
+        let newDataExpectation = expectation(description: "Completion with new data")
+        var receivedResult: UIBackgroundFetchResult?
+
+        AppDelegateComponentRunner().componentStore(store,
+                                                    app: UIApplication.shared,
+                                                    didReceiveRemoteNotification: [:]) { result in
+                                                        receivedResult = result
+                                                        newDataExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10) { error in
+            XCTAssert(receivedResult == .some(.newData), "Not new data")
+        }
+    }
+
+    func test_didReceiveRemoteNotification_returnsFailedIfNoNewDataAndFailed() {
+        let component1 = FetchComponent(delay: 1, result: .failed)
+        let component2 = FetchComponent(delay: 1.9, result: .noData)
+        let component3 = FetchComponent(delay: 1.5, result: .noData)
+
+        let store = Store(storedComponents: [component1, component2, component3])
+
+        let newDataExpectation = expectation(description: "Completion with new data")
+        var receivedResult: UIBackgroundFetchResult?
+
+        AppDelegateComponentRunner().componentStore(store,
+                                                    app: UIApplication.shared,
+                                                    didReceiveRemoteNotification: [:]) { result in
+                                                        receivedResult = result
+                                                        newDataExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10) { error in
+            XCTAssert(receivedResult == .some(.failed), "Not new data")
+        }
+    }
+
+    func test_didReceiveRemoteNotification_returnsNoDataIfNoNewDataAndNotFailed() {
+        let component1 = FetchComponent(delay: 1, result: .noData)
+        let component2 = FetchComponent(delay: 1.9, result: .noData)
+        let component3 = FetchComponent(delay: 1.5, result: .noData)
+
+        let store = Store(storedComponents: [component1, component2, component3])
+
+        let newDataExpectation = expectation(description: "Completion with new data")
+        var receivedResult: UIBackgroundFetchResult?
+
+        AppDelegateComponentRunner().componentStore(store,
+                                                    app: UIApplication.shared,
+                                                    didReceiveRemoteNotification: [:]) { result in
+                                                        receivedResult = result
+                                                        newDataExpectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10) { error in
+            XCTAssert(receivedResult == .some(.noData), "Not new data")
+        }
+    }
 }
 
 final class FetchComponent: AppDelegateComponent {
@@ -76,6 +144,12 @@ final class FetchComponent: AppDelegateComponent {
     }
 
     func application(_ app: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
+            completionHandler(self.result)
+        }
+    }
+
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         DispatchQueue.global(qos: .background).asyncAfter(deadline: .now() + delay) {
             completionHandler(self.result)
         }
