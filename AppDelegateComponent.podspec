@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'AppDelegateComponent'
-  s.version          = '1.0'
+  s.version          = '1.0.1'
   s.summary          = 'Split functionality in AppDelegate into smaller components'
   s.description      = 'Provides a easy way to split functionality used in AppDelegate callbacks into small components'
 

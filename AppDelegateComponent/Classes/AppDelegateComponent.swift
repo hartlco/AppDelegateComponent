@@ -101,17 +101,17 @@ final public class AppDelegateComponentRunner {
     public func componentStore(_ componentStore: AppDelegateComponentStore,
                                application: UIApplication,
                                willFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        return componentStore.storedComponents.reduce(false, { result, component in
-            return result || component.application(application, willFinishLaunchingWithOptions: launchOptions)
-        })
+        return componentStore.storedComponents.map { component in
+            component.application(application, willFinishLaunchingWithOptions: launchOptions)
+        }.contains(true)
     }
 
     public func componentStore(_ componentStore: AppDelegateComponentStore,
                         application: UIApplication,
                         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        return componentStore.storedComponents.reduce(false, { result, component in
-            return result || component.application(application, didFinishLaunchingWithOptions: launchOptions)
-        })
+        return componentStore.storedComponents.map { component in
+            component.application(application, didFinishLaunchingWithOptions: launchOptions)
+        }.contains(true)
     }
 
     public func componentStore(_ componentStore: AppDelegateComponentStore,
@@ -154,9 +154,9 @@ final public class AppDelegateComponentRunner {
                                open url: URL,
                                options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
 
-        return componentStore.storedComponents.reduce(false, { result, component in
-            return result || component.application(app, open: url, options: options)
-        })
+        return componentStore.storedComponents.map { component in
+            component.application(app, open: url, options: options)
+        }.contains(true)
     }
 
     public func componentStore(_ componentStore: AppDelegateComponentStore,

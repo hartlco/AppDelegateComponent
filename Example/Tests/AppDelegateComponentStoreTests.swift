@@ -3,6 +3,28 @@ import AppDelegateComponent
 import UIKit
 
 class AppDelegateComponentStoreTests: XCTestCase {
+    // MARK: - didFinishLaunchingWithOptions
+
+    func test_didFinishLaunchingWithOptions_allComponentsGetCalled() {
+        class Component: AppDelegateComponent {
+            var called = false
+            func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]?) -> Bool {
+                called = true
+                return true
+            }
+        }
+
+        let component1 = Component()
+        let component2 = Component()
+
+        let store = Store(storedComponents: [component1, component2])
+        _ = AppDelegateComponentRunner().componentStore(store,
+                                                    application: UIApplication.shared,
+                                                    didFinishLaunchingWithOptions: nil)
+        XCTAssert(component1.called == true, "Not called for component 1")
+        XCTAssert(component2.called == true, "Not called for component 2")
+    }
+
     // MARK: - performFetchWithCompletionHandler
 
     func test_performFetchWithCompletionHandler_returnsNewDataIfAvailable() {
